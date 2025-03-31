@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="com.mytech.models.User" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,17 +31,30 @@
             
             <% 
                 // Kiểm tra xem người dùng đã đăng nhập chưa
-                String username = (String) session.getAttribute("username");
-                if (username != null) { 
+                User user = (User) session.getAttribute("user");
+                if (user != null) { 
+                	// Lấy loginDate từ session
+                    Long loginTime = (Long) session.getAttribute("loginDate");
+                    String loginDateStr = "";
+                    if (loginTime != null) {
+                        // Chuyển mili giây thành định dạng ngày giờ
+                        Date loginDate = new Date(loginTime);
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                        loginDateStr = sdf.format(loginDate);
+                    }
             %>
                 <div class="mt-4">
-                    <h3>Xin chào, <%= username %>!</h3>
-                    <a href="LogoutServlet" class="btn btn-danger mt-3">Đăng xuất</a>
+                    <h3>Xin chào, <%= user.getUsername() %>!</h3>
+                     <h3>Login at: <%= loginDateStr %>!</h3>
+                    <a href="/logout" class="btn btn-danger mt-3">Đăng xuất</a>
+                    <a href="/profile" class="btn btn-primary mt-3">Xem thông tin cá nhân</a>
+                    <a href="/products" class="btn btn-primary mt-3">Sản Phẩm</a>
                 </div>
+                
             <% } else { %>
                 <div class="mt-4">
                     <p>Vui lòng đăng nhập để tiếp tục</p>
-                    <a href="login.jsp" class="btn btn-primary">Đăng nhập</a>
+                    <a href="/login" class="btn btn-primary">Đăng nhập</a>
                 </div>
             <% } %>
         </div>
